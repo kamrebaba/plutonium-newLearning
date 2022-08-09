@@ -34,5 +34,54 @@ router.get('/student-details/:name', function(req, res){
     
     res.send('Dummy response')
 })
+// 1st Problem.***
+router.get('/get-movies',function(req, res){ //student detail api id here..
+    let movies1= ["shole ","Rang de basanti","dil mange more","tiranga"]//api is implementation is used to send response for request.
+    res.send(movies1)
+})
+//2nd Problem***
+router.get('/get-movie/:indexNumber',function(req, res){ //student detail api here..
+    
+    let movies=['rang de basanti','The shining','Lord of the rings','batman begins']
+    let index = req.params.indexNumber;
+    console.log(movies[index])
+     res.send(movies[index])
+})
+//3rd Problem**
+router.get('/get-moviess/:indexNumber',function(req, res){ 
+    
+    let moviesName=['rang de basanti','The shining','Lord of the rings','batman begins']
+    let index = req.params.indexNumber;
+
+     if(index > moviesName.length){
+        return res.send("valid index ")
+     }else{
+    
+     res.send(moviesName[index])
+     }
+})
+//4th Problem
+router.get('/get-/films',function(req, res){ //student detail api here   
+
+    let moviesName=[ {"id": 1,"name": "The Shining"}, 
+                     {"id": 2,"name": "Incendies"}, 
+                     {"id": 3,"name": "Rang de Basanti"},
+                      {"id": 4,"name": "Finding Nemo"}]
+    res.send(moviesName)
+})
+//5th Problem**
+router.get('/get-/films/:indexNumber',function(req, res){ //student detail api he    
+
+    let moviesName=[ {"id": 1,"name": "The Shining"}, 
+ {"id": 2,"name": "Incendies"}, 
+ {"id": 3,"name": "Rang de Basanti"},
+  {"id": 4,"name": "Finding Nemo"}]
+    let index = req.params.indexNumber;
+     if(index > moviesName.length){
+        return res.send("no movie exist with this id ")
+     }else{
+     res.send(moviesName[index])
+     }
+})
 
 module.exports = router;
