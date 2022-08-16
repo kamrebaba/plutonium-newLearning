@@ -1,19 +1,18 @@
 const express = require('express');
-var bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 
 const route = require('./routes/route.js');
 const { default: mongoose } = require('mongoose');
 
 const app = express();
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect("mongodb+srv://functionup-cohort:3bMssIUqmBmIqb3e@cluster0.3ccgp0v.mongodb.net/PK-100?retryWrites=true&w=majority"
-, {
+mongoose.connect("mongodb+srv://kamrebaba:ironman@cluster0.lvfp80k.mongodb.net/alam01-DB?retryWrites=true&w=majority", {
    useNewUrlParser: true 
-}
-).then( () => {console.log( "MongoDb is connected")}  )
+})
+.then( () => console.log( "MongoDb is connected") )
 .catch( err => console.log(err))
 
 
