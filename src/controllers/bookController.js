@@ -1,16 +1,18 @@
 const { count } = require("console")
+const authorModel = require("../models/authorModel")
+const bookModel = require("../models/bookModel")
 const BookModel= require("../models/bookModel")
 
-const createBook= async function (req, res) {
-    let data= req.body
+// const createBook= async function (req, res) {
+//     let data= req.body
 
-    let savedData= await BookModel.create(data)
-    res.send({msg: savedData})
-}
+//     let savedData= await BookModel.create(data)
+//     res.send({msg: savedData})
+// }
 
-const getBooksData= async function (req, res) {
+// const getBooksData= async function (req, res) {
 
-    // let allBooks= await BookModel.find( ).count() // COUNT
+//     let allBooks= await BookModel.find( )// COUNT
 
     // let allBooks= await BookModel.find( { authorName : "Chetan Bhagat" , isPublished: true  } ) // AND
     
@@ -65,21 +67,66 @@ const getBooksData= async function (req, res) {
     
     // ASYNC AWAIT
     
-    let a= 2+4
-    a= a + 10
-    console.log(a)
-    let allBooks= await BookModel.find( )  //normally this is an asynchronous call..but await makes it synchronous
+    // let a= 2+4
+    // a= a + 10
+    // console.log(a)
+    // let allBooks= await BookModel.find( )  //normally this is an asynchronous call..but await makes it synchronous
 
 
     // WHEN AWAIT IS USED: - database + axios
     //  AWAIT can not be used inside forEach , map and many of the array functions..BE CAREFUL
-    console.log(allBooks)
-    let b = 14
-    b= b+ 10
-    console.log(b)
-    res.send({msg: allBooks})
+    // console.log(allBooks)
+    // let b = 14
+    // b= b+ 10
+    // console.log(b)
+    // res.send({msg: allBooks})
+// }
+// create author here...
+const createAuthor= async function(req,res){
+    let data= req.body
+    let savedData= await authorModel.create(data)
+    res.send ({ msg :savedData})
 }
-
-
+// create book here...
+const createBook = async function(req,res){
+    let data= req.body
+    let savedData = await bookModel.create(data)
+    res.send ({ msg : savedData})
+}
+//1st 
+//List out the books written by "Chetan Bhagat" 
+// this will need 2 DB queries one after another- first query will find the author_id for "Chetan Bhagat”. 
+const getBooksData= async function( req , res){
+    let authors= await authorModel.find({ author_name: "Chetan Bhagat"})
+    let bookid= await bookModel.find({ author_id : { $eq : authors[0].author_id}})
+    res.send({ msg : bookid})
+}
+//2nd
+//find the author of “Two states” and update the book price to 100;
+// send back the author name and updated price in response..
+const findAuthor = async function( req , res){
+    let bookPrice= await bookModel.findOneAndUpdate(
+        { name :"Two States"},
+        { price : 100},
+        { new : true}
+    )
+    
+        let updatePrice = bookPrice.price;
+        let authorUpdate= await authorModel.find( { author_id:{ $eq : bookPrice.author_id}}).select({ author_name : 1, _id : 0})
+        res.send({msg: updatePrice , authorUpdate})
+    
+}
+//3rd 
+//Find the books which costs between 50-100(50,100 inclusive) and
+//respond back with the author names of respective books.. 
+const findBook = async function( req , res ){
+     let allBooks = await bookModel.find({price : {$gte :50 , $lte :100}})
+     let store = allBooks.map( x => x.author_id);
+     let NewBooks = await authorModel.find({author_id : store }).select({author_name : 1, _id :0 })
+res.send({ msg :NewBooks})
+}
+module.exports.createAuthor=createAuthor
 module.exports.createBook= createBook
 module.exports.getBooksData= getBooksData
+module.exports.findAuthor= findAuthor
+module.exports.findBook = findBook
